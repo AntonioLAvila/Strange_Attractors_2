@@ -74,6 +74,33 @@ impl<const N: usize, const L: usize, D: Dynamics> Attractor<N, L, D> {
             }
         }
     }
+
+    pub fn reset_points_random(&mut self, min: f32, max: f32) {
+        let mut rng = rand::rng();
+
+        self.points = from_fn(|_| {
+            let x = rng.random_range(min..max);
+            let y = rng.random_range(min..max);
+            let z = rng.random_range(min..max);
+            Point3::new(x, y, z)
+        });
+
+        self.buffers = self.points.map(|p| CircularBuffer::new(p));
+    }
+
+    // pub fn reset_points_uniform(&mut self, min: f64, max: f64) {
+    //     let side_length = (N as f64).cbrt().ceil();
+    //     let step = (max - min)/side_length;
+
+    //     self.points = from_fn(|i| {
+    //         let x = 0.;
+    //         let y = 0.;
+    //         let z = 0.;
+    //         Point3::new(x, y, z)
+    //     });
+
+    //     self.buffers = self.points.map(|p| CircularBuffer::new(p));
+    // }
 }
 
 

@@ -5,17 +5,17 @@ mod util;
 
 use kiss3d::window::Window;
 use kiss3d::light::Light;
-use attractors::Halvorsen;
-use attractors::Attractor;
+use attractors::*;
 
-const dt: f32 = 0.01;
+const dt: f32 = 0.0001;
 
 fn main() {
     let mut window = Window::new("Strange Attractors 2");
     window.set_light(Light::StickToCamera);
     window.set_line_width(1.);
 
-    let mut attractor = Attractor::<100, 90, Halvorsen>::new(Halvorsen::new());
+    let mut attractor = Attractor::<100, 90, ThreeScroll>::new(ThreeScroll::new());
+    attractor.reset_points_random(-5., 5.);
 
     while window.render() {
         attractor.update(dt);
