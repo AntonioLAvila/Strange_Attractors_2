@@ -1,0 +1,9 @@
+[package]
+name = "Strange_Attractors_2"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+kiss3d = "0.32"
+rand = "0.9.1"
+
