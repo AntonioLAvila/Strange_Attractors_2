@@ -87,20 +87,6 @@ impl<const N: usize, const L: usize, D: Dynamics> Attractor<N, L, D> {
 
         self.buffers = self.points.map(|p| CircularBuffer::new(p));
     }
-
-    // pub fn reset_points_uniform(&mut self, min: f64, max: f64) {
-    //     let side_length = (N as f64).cbrt().ceil();
-    //     let step = (max - min)/side_length;
-
-    //     self.points = from_fn(|i| {
-    //         let x = 0.;
-    //         let y = 0.;
-    //         let z = 0.;
-    //         Point3::new(x, y, z)
-    //     });
-
-    //     self.buffers = self.points.map(|p| CircularBuffer::new(p));
-    // }
 }
 
 
@@ -131,8 +117,8 @@ pub struct Lorentz {
 impl Dynamics for Lorentz {
     fn derivatives(&self, x: f32, y: f32, z: f32, dt: f32) -> (f32, f32, f32) {
         (
-            (self.sigma*(-x*y)) * dt,
-            (-x*z + self.rho*x - y) * dt,
+            (self.sigma*(y - x)) * dt,
+            (x*(self.rho - z) - y) * dt,
             (x*y - self.beta*z) * dt,
         )
     }
