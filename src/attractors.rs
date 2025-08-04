@@ -49,13 +49,15 @@ impl<const N: usize, const L: usize, D: Dynamics> Attractor<N, L, D> {
         }
     }
 
-    pub fn draw(&self, window: &mut Window) {
+    pub fn draw_gradient(&self, window: &mut Window, hsv_ub: Option<f64>, hsv_lb: Option<f64>) {
         let mut color: Point3<f32> = Point3::new(0., 0., 0.);
-        let step = (230. - 140.)/{L as f64}/255.;
+        let ub = hsv_ub.unwrap_or(230.);
+        let lb = hsv_lb.unwrap_or(140.);
+        let step = (ub - lb)/{L as f64}/255.;
         for i in 0..N {
             let buffer = &self.buffers[i];
 
-            let mut h = 140./255.;
+            let mut h = lb/255.;
             let mut direction = 1.;
             for j in 0..L-2 {
                 let (r, g, b) = hsv_to_rgb(&h, &1., &1.);
@@ -65,12 +67,23 @@ impl<const N: usize, const L: usize, D: Dynamics> Attractor<N, L, D> {
 
                 window.draw_line(buffer.get(j), buffer.get(j+1), &color);
 
-                if h <= 140./255. {
+                if h <= lb/255. {
                     direction = 1.
-                } else if h >= 230./255. {
+                } else if h >= ub/255. {
                     direction = -1.
                 }
                 h += step*direction;
+            }
+        }
+    }
+
+    pub fn draw_solid(&self, window: &mut Window, rgb_color: Option<&Point3<f32>>) {
+        let default_color = Point3::new(0.0, 0.0, 0.0);
+        let color = rgb_color.unwrap_or(&default_color);
+        for i in 0..N {
+            let buffer = &self.buffers[i];
+            for j in 0..L-2 {
+                window.draw_line(buffer.get(j), buffer.get(j+1), color);
             }
         }
     }
